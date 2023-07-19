@@ -22,6 +22,7 @@ public class Song {
     private UUID genreId;
     private UUID artistId;
     private UUID albumId;
+    private String url;
     //TODO: ses dosyası eklenebilir mi sor
 
 }
