@@ -1,0 +1,1094 @@
+openapi: 3.0.1
+info:
+  title: Soundwave API Documentation - http://localhost:8090
+  version: version 1.0
+servers:
+  - url: 'http://localhost:8090'
+    description: Generated server url
+paths:
+  '/api/users/{id}':
+    get:
+      tags:
+        - users-controller
+      operationId: getById_user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GetUserResponse'
+    put:
+      tags:
+        - users-controller
+      operationId: update_user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UpdateUserResponse'
+    delete:
+      tags:
+        - users-controller
+      operationId: delete_user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+  '/api/songs/{id}':
+    get:
+      tags:
+        - songs-controller
+      operationId: getById_song
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GetSongResponse'
+    put:
+      tags:
+        - songs-controller
+      operationId: update_song
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSongRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UpdateSongResponse'
+    delete:
+      tags:
+        - songs-controller
+      operationId: delete_song
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+  '/api/genres/{id}':
+    get:
+      tags:
+        - genres-controller
+      operationId: getById_genre
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GetGenreResponse'
+    put:
+      tags:
+        - genres-controller
+      operationId: update_genre
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateGenreRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UpdateGenreResponse'
+    delete:
+      tags:
+        - genres-controller
+      operationId: delete_genre
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+  '/api/follows/{id}':
+    get:
+      tags:
+        - follows-controller
+      operationId: getById_follow
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GetFollowResponse'
+    put:
+      tags:
+        - follows-controller
+      operationId: update_follow
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFollowRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UpdateFollowResponse'
+    delete:
+      tags:
+        - follows-controller
+      operationId: delete_follow
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+  '/api/favorites/{id}':
+    get:
+      tags:
+        - favorites-controller
+      operationId: getById_favorite
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GetFavoriteResponse'
+    put:
+      tags:
+        - favorites-controller
+      operationId: update_favorite
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFavoriteRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UpdateFavoriteResponse'
+    delete:
+      tags:
+        - favorites-controller
+      operationId: delete_favorite
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+  '/api/artists/{id}':
+    get:
+      tags:
+        - artists-controller
+      operationId: getById_artist
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GetArtistResponse'
+    put:
+      tags:
+        - artists-controller
+      operationId: update_artist
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateArtistRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UpdateArtistResponse'
+    delete:
+      tags:
+        - artists-controller
+      operationId: delete_artist
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+  '/api/albums/{id}':
+    get:
+      tags:
+        - albums-controller
+      operationId: getById_album
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GetAlbumResponse'
+    put:
+      tags:
+        - albums-controller
+      operationId: update_album
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAlbumRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UpdateAlbumResponse'
+    delete:
+      tags:
+        - albums-controller
+      operationId: delete_album
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+  /api/users:
+    get:
+      tags:
+        - users-controller
+      operationId: getAll_user
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetAllUsersResponse'
+    post:
+      tags:
+        - users-controller
+      operationId: add_user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CreateUserResponse'
+  /api/songs:
+    get:
+      tags:
+        - songs-controller
+      operationId: getAll_song
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetAllSongsResponse'
+    post:
+      tags:
+        - songs-controller
+      operationId: add_song
+      parameters:
+        - name: file
+          in: query
+          required: true
+          schema:
+            type: string
+            format: binary
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSongRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CreateSongResponse'
+  /api/genres:
+    get:
+      tags:
+        - genres-controller
+      operationId: getAll_genre
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetAllGenresResponse'
+    post:
+      tags:
+        - genres-controller
+      operationId: add_genre
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGenreRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CreateGenreResponse'
+  /api/follows:
+    get:
+      tags:
+        - follows-controller
+      operationId: getAll_follow
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetAllFollowsResponse'
+    post:
+      tags:
+        - follows-controller
+      operationId: add_follow
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFollowRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CreateFollowResponse'
+  /api/favorites:
+    get:
+      tags:
+        - favorites-controller
+      operationId: getAll_favorite
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetAllFavoritesResponse'
+    post:
+      tags:
+        - favorites-controller
+      operationId: add_favorite
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFavoriteRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CreateFavoriteResponse'
+  /api/artists:
+    get:
+      tags:
+        - artists-controller
+      operationId: getAll_artist
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetAllArtistsResponse'
+    post:
+      tags:
+        - artists-controller
+      operationId: add_artist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateArtistRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CreateArtistResponse'
+  /api/albums:
+    get:
+      tags:
+        - albums-controller
+      operationId: getAll_album
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetAllAlbumsResponse'
+    post:
+      tags:
+        - albums-controller
+      operationId: add_album
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAlbumRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CreateAlbumResponse'
+components:
+  schemas:
+    UpdateUserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        password:
+          type: string
+    UpdateUserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        password:
+          type: string
+    UpdateSongRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        genreId:
+          type: string
+          format: uuid
+        artistId:
+          type: string
+          format: uuid
+        albumId:
+          type: string
+          format: uuid
+    UpdateSongResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        genreId:
+          type: string
+          format: uuid
+        artistId:
+          type: string
+          format: uuid
+        albumId:
+          type: string
+          format: uuid
+    UpdateGenreRequest:
+      type: object
+      properties:
+        name:
+          type: string
+    UpdateGenreResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+    UpdateFollowRequest:
+      type: object
+      properties:
+        followingId:
+          type: string
+          format: uuid
+        followedId:
+          type: string
+          format: uuid
+    UpdateFollowResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        followingId:
+          type: string
+          format: uuid
+        followedId:
+          type: string
+          format: uuid
+    UpdateFavoriteRequest:
+      type: object
+      properties:
+        songId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+    UpdateFavoriteResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        songId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+    UpdateArtistRequest:
+      type: object
+      properties:
+        name:
+          type: string
+    UpdateArtistResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+    UpdateAlbumRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        numberOfSong:
+          type: integer
+          format: int32
+        releaseDate:
+          type: string
+          format: date
+        artistId:
+          type: string
+          format: uuid
+    UpdateAlbumResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        numberOfSong:
+          type: integer
+          format: int32
+        releaseDate:
+          type: string
+          format: date
+        artistId:
+          type: string
+          format: uuid
+    CreateUserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        password:
+          type: string
+    CreateUserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        password:
+          type: string
+    CreateSongRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        genreId:
+          type: string
+          format: uuid
+        artistId:
+          type: string
+          format: uuid
+        albumId:
+          type: string
+          format: uuid
+    CreateSongResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        genreId:
+          type: string
+          format: uuid
+        artistId:
+          type: string
+          format: uuid
+        albumId:
+          type: string
+          format: uuid
+        url:
+          type: string
+    CreateGenreRequest:
+      type: object
+      properties:
+        name:
+          type: string
+    CreateGenreResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+    CreateFollowRequest:
+      type: object
+      properties:
+        followingId:
+          type: string
+          format: uuid
+        followedId:
+          type: string
+          format: uuid
+    CreateFollowResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        followingId:
+          type: string
+          format: uuid
+        followedId:
+          type: string
+          format: uuid
+    CreateFavoriteRequest:
+      type: object
+      properties:
+        songId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+    CreateFavoriteResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        songId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+    CreateArtistRequest:
+      type: object
+      properties:
+        name:
+          type: string
+    CreateArtistResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+    CreateAlbumRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        numberOfSong:
+          type: integer
+          format: int32
+        artistId:
+          type: string
+          format: uuid
+    CreateAlbumResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        numberOfSong:
+          type: integer
+          format: int32
+        releaseDate:
+          type: string
+          format: date
+        artistId:
+          type: string
+          format: uuid
+    GetAllUsersResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        password:
+          type: string
+    GetUserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        password:
+          type: string
+    GetAllSongsResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        genreId:
+          type: string
+          format: uuid
+        artistId:
+          type: string
+          format: uuid
+        albumId:
+          type: string
+          format: uuid
+    GetSongResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        genreId:
+          type: string
+          format: uuid
+        artistId:
+          type: string
+          format: uuid
+        albumId:
+          type: string
+          format: uuid
+    GetAllGenresResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+    GetGenreResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+    GetAllFollowsResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        followingId:
+          type: string
+          format: uuid
+        followedId:
+          type: string
+          format: uuid
+    GetFollowResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        followingId:
+          type: string
+          format: uuid
+        followedId:
+          type: string
+          format: uuid
+    GetAllFavoritesResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        songId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+    GetFavoriteResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        songId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+    GetAllArtistsResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+    GetArtistResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+    GetAllAlbumsResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        numberOfSong:
+          type: integer
+          format: int32
+        releaseDate:
+          type: string
+          format: date
+        artistId:
+          type: string
+          format: uuid
+    GetAlbumResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        numberOfSong:
+          type: integer
+          format: int32
+        releaseDate:
+          type: string
+          format: date
+        artistId:
+          type: string
+          format: uuid
