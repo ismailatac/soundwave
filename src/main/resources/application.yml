@@ -13,11 +13,10 @@ spring:
             mode: none
     hibernate:
       ddl-auto: update
+  profiles:
+    active: dev
 server:
-  port: 8090
-springfox:
-  documentation:
-    swagger-ui:
-      base-url: myproject
+  port: 8080
+
 
 
