@@ -9,10 +9,7 @@ import com.atmosware.soundwave.business.rules.SongBusinessRules;
 import com.atmosware.soundwave.common.constants.ExceptionTypes;
 import com.atmosware.soundwave.core.exceptions.DatabaseException;
 import com.atmosware.soundwave.core.utilities.cloudinary.CloudinaryService;
-import com.atmosware.soundwave.entities.Album;
-import com.atmosware.soundwave.entities.Artist;
-import com.atmosware.soundwave.entities.Genre;
-import com.atmosware.soundwave.entities.Song;
+import com.atmosware.soundwave.entities.*;
 import com.atmosware.soundwave.repository.SongRepository;
 
 import java.util.List;
@@ -58,7 +55,11 @@ public class SongManager implements SongService {
     public CreateSongResponse add(CreateSongRequest request) {
         Genre genre = mapper.map(genreService.getById(request.getGenreId()), Genre.class);
         Album album = mapper.map(albumService.getById(request.getAlbumId()), Album.class);
-        Song songSave = new Song(null,request.getName(),null,genre,album);
+        Song songSave = new Song();
+        songSave.setId(null);
+        songSave.setName(request.getName());
+        songSave.setGenre(genre);
+        songSave.setAlbum(album);
         Song responseSong;
         try {
             responseSong = repository.save(songSave);
@@ -94,7 +95,6 @@ public class SongManager implements SongService {
             throw new DatabaseException(e.getMessage());
         }
         return mapper.map(songResponse, UpdateSongResponse.class);
-        //TODO: SLf4J log nereye yazılacak Log4J hangisini kullanmalıyım
     }
 
     @Override

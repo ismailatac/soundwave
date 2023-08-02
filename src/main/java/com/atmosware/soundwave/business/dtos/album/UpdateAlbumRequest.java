@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdateAlbumRequest {
     private String name;
-    private int numberOfSong;
-    private LocalDate releaseDate;
+//    private int numberOfSong;
+//    private LocalDate releaseDate;
 }

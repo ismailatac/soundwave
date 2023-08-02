@@ -1,4 +1,4 @@
-package com.atmosware.soundwave.core.utilities.dtos;
+package com.atmosware.soundwave.core.utilities.dtos.cloudinary;
 
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UploadCloudinaryResponse {
+public class DeleteCloudinaryResponse {
     private boolean isSuccess;
-    private Map<?,?> uploadResult;
+    private Map<?,?> deleteResult;
 
 }

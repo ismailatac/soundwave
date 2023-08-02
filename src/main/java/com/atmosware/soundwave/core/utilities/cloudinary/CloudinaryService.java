@@ -1,7 +1,7 @@
 package com.atmosware.soundwave.core.utilities.cloudinary;
 
-import com.atmosware.soundwave.core.utilities.dtos.DeleteCloudinaryResponse;
-import com.atmosware.soundwave.core.utilities.dtos.UploadCloudinaryResponse;
+import com.atmosware.soundwave.core.utilities.dtos.cloudinary.DeleteCloudinaryResponse;
+import com.atmosware.soundwave.core.utilities.dtos.cloudinary.UploadCloudinaryResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface CloudinaryService {

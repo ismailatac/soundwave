@@ -1,5 +1,6 @@
 package com.atmosware.soundwave.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 import java.util.UUID;
@@ -20,5 +21,6 @@ public class Artist {
     private UUID id;
     private String name;
     @OneToMany(mappedBy = "artist")
+    @JsonIgnore
     private List<Album> albums;
 }

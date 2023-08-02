@@ -1,6 +1,9 @@
 package com.atmosware.soundwave.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,5 +32,9 @@ public class Song {
     @ManyToOne
     @JoinColumn(name = "album_id")
     private Album album;
+
+    @OneToMany(mappedBy = "song")
+    @JsonIgnore
+    private List<Favorite> favorites;
 
 }

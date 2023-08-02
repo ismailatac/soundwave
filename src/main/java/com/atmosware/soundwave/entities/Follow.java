@@ -17,6 +17,10 @@ public class Follow {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private UUID followingId;
-    private UUID followedId;
+    @ManyToOne
+    @JoinColumn(name = "following_id")
+    private User followingUser;
+    @ManyToOne
+    @JoinColumn(name = "followed_id")
+    private User followedUser;
 }

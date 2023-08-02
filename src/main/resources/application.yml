@@ -1,4 +1,6 @@
 spring:
+  main:
+      allow-bean-definition-overriding: true
   datasource:
     username: postgres
     url: jdbc:postgresql://localhost:5432/soundwave
@@ -17,6 +19,26 @@ spring:
     active: dev
 server:
   port: 8080
+application:
+  security:
+    jwt:
+      secret-key: 1cc545c907bb8122cdd3d5feec5d5e5062db82bebe5c83eab114a33aaf9536c2
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      base-path: "/spring-actuator"
+  endpoint:
+    health:
+      show-details: always
+info:
+  app:
+    name: "Soundwave Music App"
+    description: "This is an application to listen music"
+    version: "1.0"
 
 
 

@@ -4,6 +4,7 @@ import com.atmosware.soundwave.common.constants.ExceptionTypes;
 import com.atmosware.soundwave.core.exceptions.BusinessException;
 import com.atmosware.soundwave.core.exceptions.DatabaseException;
 import com.atmosware.soundwave.core.utilities.results.ExceptionResult;
+import io.jsonwebtoken.JwtException;
 import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,13 +20,18 @@ public class RestExceptionHandler {
     }
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ExceptionResult<Object> handleDatabaseException(BusinessException exception) {
+    public ExceptionResult<Object> handleBusinessException(BusinessException exception) {
         return new ExceptionResult<>(ExceptionTypes.Exception.Business, exception.getMessage());
     }
     @ExceptionHandler
     @ResponseStatus(HttpStatus.FORBIDDEN) //403
     public ExceptionResult<Object> handleValidationException(ValidationException exception) {
         return new ExceptionResult<>(ExceptionTypes.Exception.Validation, exception.getMessage());
+    }
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ExceptionResult<Object> handleJwtException(JwtException exception) {
+        return new ExceptionResult<>(ExceptionTypes.Exception.Jwt, exception.getMessage());
     }
 
 }

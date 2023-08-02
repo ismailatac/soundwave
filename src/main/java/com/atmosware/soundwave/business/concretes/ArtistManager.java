@@ -44,7 +44,7 @@ public class ArtistManager implements ArtistService {
 
     @Override
     public CreateArtistResponse add(CreateArtistRequest request) {
-        Artist artistSave = artistMapper.map_create(request);
+        Artist artistSave = artistMapper.convertToCreateArtistRequest(request);
         artistSave.setId(null);
         Artist responseArtist;
         try {

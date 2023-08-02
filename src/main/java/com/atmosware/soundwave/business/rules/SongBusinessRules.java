@@ -18,13 +18,19 @@ public class SongBusinessRules {
     private final SongRepository repository;
 
     public void checkIfSongExists(UUID id) {
-        log.error(ExceptionTypes.Exception.Business + ": Şarkı bulunamadı!");
-        if (!repository.existsById(id)) throw new BusinessException("Şarkı bulunamadı!");
+
+        if (!repository.existsById(id)){
+            log.error(ExceptionTypes.Exception.Business + ": Şarkı bulunamadı!");
+            throw new BusinessException("Şarkı bulunamadı!");
+        }
     }
 
     public void checkIfAnySongExists(List<Song> songs) {
-        log.error(ExceptionTypes.Exception.Business + ": Şarkılar bulunamadı!");
-        if (songs.isEmpty()) throw new BusinessException("Şarkılar bulunamadı!");
+
+        if (songs.isEmpty()) {
+            log.error(ExceptionTypes.Exception.Business + ": Şarkılar bulunamadı!");
+            throw new BusinessException("Şarkılar bulunamadı!");
+        }
     }
 
 }

@@ -34,8 +34,8 @@ public class AlbumBusinessRules {
 
     public void checkIfAlbumSameNameExists(Artist artist, String name) {
         List<Album> albums = repository.findByArtist(artist);
-        for (Album a : albums) {
-            if (a.getName().equals(name)) {
+        for (Album album : albums) {
+            if (album.getName().equals(name)) {
                 log.error(ExceptionTypes.Exception.Business + ": Aynı isimde albüm mevcut");
                 throw new BusinessException("Aynı isimde albüm mevcut");
             }

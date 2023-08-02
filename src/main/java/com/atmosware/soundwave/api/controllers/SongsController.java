@@ -5,6 +5,7 @@ import com.atmosware.soundwave.business.dtos.song.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +20,7 @@ public class SongsController {
 
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public List<GetAllSongsResponse> getAll() {
         return service.getAll();
     }
@@ -47,11 +49,7 @@ public class SongsController {
     public CreateSongResponse add(@RequestBody CreateSongRequest song) {
         return service.add(song);
     }
-    //,consumes = { MediaType.ALL_VALUE }
-    //,consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
-    //,consumes = { MediaType.MULTIPART_FORM_DATA_VALUE }
-    //,consumes= "multipart/formdata", produces = "multipart/formdata"
-    //,consumes= "multipart/formdata", produces = "multipart/formdata"
+
 
 
 }

@@ -2,20 +2,23 @@ package com.atmosware.soundwave.api.controllers;
 
 import com.atmosware.soundwave.business.abstracts.AlbumService;
 import com.atmosware.soundwave.business.dtos.album.*;
+import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/albums")
 public class AlbumsController {
     private final AlbumService service;
-
-
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public List<GetAllAlbumsResponse> getAll() {
         return service.getAll();
     }
@@ -41,6 +44,8 @@ public class AlbumsController {
     public CreateAlbumResponse add( @RequestBody CreateAlbumRequest album) {
         return service.add(album);
     }
+
+
 
 
 }

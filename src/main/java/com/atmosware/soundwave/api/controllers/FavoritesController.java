@@ -3,10 +3,13 @@ package com.atmosware.soundwave.api.controllers;
 import com.atmosware.soundwave.business.abstracts.FavoriteService;
 import com.atmosware.soundwave.business.dtos.favorite.*;
 import jakarta.validation.Valid;
+
 import java.util.List;
 import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -39,7 +42,8 @@ public class FavoritesController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CreateFavoriteResponse add(@Valid @RequestBody CreateFavoriteRequest favorite) {
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public CreateFavoriteResponse add(@RequestBody CreateFavoriteRequest favorite) {
         return service.add(favorite);
     }
 

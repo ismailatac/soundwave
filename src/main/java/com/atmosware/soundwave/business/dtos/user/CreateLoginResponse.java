@@ -1,5 +1,6 @@
 package com.atmosware.soundwave.business.dtos.user;
 
+import com.atmosware.soundwave.entities.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,5 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateLoginResponse {
     private boolean isLogin;
-    private String role;
+    private Role role;
+    private String token;
 }

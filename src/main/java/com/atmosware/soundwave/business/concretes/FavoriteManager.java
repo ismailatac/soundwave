@@ -1,21 +1,23 @@
 package com.atmosware.soundwave.business.concretes;
 
 import com.atmosware.soundwave.business.abstracts.FavoriteService;
+import com.atmosware.soundwave.business.abstracts.SongService;
+import com.atmosware.soundwave.business.abstracts.UserService;
 import com.atmosware.soundwave.business.dtos.favorite.*;
 import com.atmosware.soundwave.business.rules.FavoriteBusinessRules;
 import com.atmosware.soundwave.common.constants.ExceptionTypes;
 import com.atmosware.soundwave.core.exceptions.DatabaseException;
-import com.atmosware.soundwave.entities.Artist;
 import com.atmosware.soundwave.entities.Favorite;
-import com.atmosware.soundwave.entities.Favorite;
-import com.atmosware.soundwave.entities.Favorite;
+import com.atmosware.soundwave.entities.Song;
+import com.atmosware.soundwave.entities.User;
 import com.atmosware.soundwave.repository.FavoriteRepository;
-import java.util.List;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -24,6 +26,8 @@ public class FavoriteManager implements FavoriteService {
     private final FavoriteRepository repository;
     private final ModelMapper mapper;
     private final FavoriteBusinessRules rules;
+    private final SongService songService;
+    private final UserService userService;
 
     @Override
     public List<GetAllFavoritesResponse> getAll() {
@@ -41,7 +45,10 @@ public class FavoriteManager implements FavoriteService {
 
     @Override
     public CreateFavoriteResponse add(CreateFavoriteRequest request) {
-        Favorite favoriteSave = mapper.map(request, Favorite.class);
+        Favorite favoriteSave = new Favorite();
+        favoriteSave.setId(null);
+        favoriteSave.setSong(mapper.map(songService.getById(request.getSongId()), Song.class));
+        favoriteSave.setUser(mapper.map(userService.getById(request.getUserId()), User.class));
         favoriteSave.setId(null);
         Favorite responseFavorite;
         try {

@@ -17,9 +17,12 @@ public class Favorite {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private UUID songId;
-    private UUID userId;
-    //TODO: eager ve lazy nerde ve ne kullanılır
+    @ManyToOne
+    @JoinColumn(name = "song_id")
+    private Song song;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
 
 }

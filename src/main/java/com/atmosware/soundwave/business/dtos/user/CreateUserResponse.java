@@ -1,6 +1,8 @@
 package com.atmosware.soundwave.business.dtos.user;
 
 import java.util.UUID;
+
+import com.atmosware.soundwave.entities.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,5 +13,6 @@ import lombok.NoArgsConstructor;
 public class CreateUserResponse {
     private UUID id;
     private String name;
-    private String role;
+    private Role role;
+    private String token;
 }

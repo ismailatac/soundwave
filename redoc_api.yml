@@ -1,9 +1,9 @@
 openapi: 3.0.1
 info:
-  title: Soundwave API Documentation - http://localhost:8090
+  title: Soundwave API Documentation - http://localhost:8080
   version: version 1.0
 servers:
-  - url: 'http://localhost:8090'
+  - url: 'http://localhost:8080'
     description: Generated server url
 paths:
   '/api/users/{id}':

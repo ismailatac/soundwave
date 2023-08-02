@@ -1,10 +1,12 @@
 package com.atmosware.soundwave.business.concretes;
 
+import com.atmosware.soundwave.business.abstracts.AuthService;
 import com.atmosware.soundwave.business.abstracts.UserService;
 import com.atmosware.soundwave.business.dtos.user.*;
 import com.atmosware.soundwave.business.rules.UserBusinessRules;
 import com.atmosware.soundwave.common.constants.ExceptionTypes;
 import com.atmosware.soundwave.core.exceptions.DatabaseException;
+import com.atmosware.soundwave.core.utilities.dtos.security.CreateRegisterRequest;
 import com.atmosware.soundwave.entities.User;
 import com.atmosware.soundwave.repository.UserRepository;
 
@@ -12,6 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,7 @@ public class UserManager implements UserService {
     private final UserRepository repository;
     private final ModelMapper mapper;
     private final UserBusinessRules rules;
+    private final AuthService authService;
 
     @Override
     public List<GetAllUsersResponse> getAll() {
@@ -41,16 +45,26 @@ public class UserManager implements UserService {
 
     @Override
     public CreateUserResponse add(CreateUserRequest request) {
+        rules.checkIfSameUserExists(request);
         User userSave = mapper.map(request, User.class);
         userSave.setId(null);
-        User responseUser;
+        CreateUserResponse responseUser = new CreateUserResponse();
         try {
-            responseUser = repository.save(userSave);
+            var authResponse = authService.register(mapper.map(request, CreateRegisterRequest.class));
+            userSave.setName(authResponse.getUser().getName());
+            userSave.setPassword(authResponse.getUser().getPassword());
+            userSave.setRole(authResponse.getUser().getRole());
+            var repoUser = repository.save(userSave);
+            authResponse.setUser(userSave);
+            responseUser.setId(repoUser.getId());
+            responseUser.setRole(authResponse.getUser().getRole());
+            responseUser.setName(authResponse.getUser().getName());
+            responseUser.setToken(authResponse.getToken());
         } catch (Exception e) {
             log.error(ExceptionTypes.Exception.Database + ": " + e.getMessage());
             throw new DatabaseException(e.getMessage());
         }
-        return mapper.map(responseUser, CreateUserResponse.class);
+        return responseUser;
     }
 
     @Override
@@ -104,8 +118,7 @@ public class UserManager implements UserService {
 
     @Override
     public CreateLoginResponse login(CreateLoginRequest request) {
-        var login = rules.checkPassword(request.getUsername(), request.getPassword());
-        return new CreateLoginResponse(login,"admin"); //TODO: role düzenle
+        return rules.checkPassword(request.getUsername(), request.getPassword());
     }
 
 }

@@ -1,7 +1,7 @@
 package com.atmosware.soundwave.core.utilities.cloudinary;
 
-import com.atmosware.soundwave.core.utilities.dtos.DeleteCloudinaryResponse;
-import com.atmosware.soundwave.core.utilities.dtos.UploadCloudinaryResponse;
+import com.atmosware.soundwave.core.utilities.dtos.cloudinary.DeleteCloudinaryResponse;
+import com.atmosware.soundwave.core.utilities.dtos.cloudinary.UploadCloudinaryResponse;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import java.io.IOException;
@@ -22,7 +22,8 @@ public class CloudinaryManager implements CloudinaryService{
     @Override
     public UploadCloudinaryResponse upload(MultipartFile multipartFile) {
         try {
-            Map<?,?> uploadResult = cloudinary.uploader().upload(multipartFile.getBytes(), ObjectUtils.asMap("resource_type","auto"));
+            Map<?,?> uploadResult = cloudinary.uploader().upload(multipartFile.getBytes(),
+                    ObjectUtils.asMap("resource_type","auto"));
             return new UploadCloudinaryResponse(true, uploadResult);
         } catch (IOException e) {
             log.error(e.getMessage());
@@ -37,7 +38,8 @@ public class CloudinaryManager implements CloudinaryService{
         publicIdsOfSounds.add(publicIdOfSound);
 
         try {
-            Map<?, ?> deleteResult = cloudinary.api().deleteResources(publicIdsOfSounds, ObjectUtils.asMap("resource_type","auto"));
+            Map<?, ?> deleteResult = cloudinary.api().deleteResources(publicIdsOfSounds,
+                    ObjectUtils.asMap("resource_type","auto"));
             return new DeleteCloudinaryResponse(true,deleteResult);
         } catch (Exception e) {
             log.error(e.getMessage());

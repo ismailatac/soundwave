@@ -13,7 +13,7 @@ import java.util.UUID;
 public interface ArtistMapper {
     ArtistMapper INSTANCE = Mappers.getMapper(ArtistMapper.class);
     @Mapping(target = "id", expression = "java(UUID.randomUUID())")
-    Artist map_create(CreateArtistRequest artistRequest);
+    Artist convertToCreateArtistRequest(CreateArtistRequest artistRequest);
     CreateArtistResponse map_create(Artist artist);
     Artist map_update(UpdateArtistRequest artistRequest);
     UpdateArtistResponse map_update(Artist artist);
