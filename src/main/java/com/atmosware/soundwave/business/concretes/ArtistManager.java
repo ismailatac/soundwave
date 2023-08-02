@@ -30,70 +30,44 @@ public class ArtistManager implements ArtistService {
 
     @Override
     public List<GetAllArtistsResponse> getAll() {
-        List<Artist> artists;
-        try {
-            artists = repository.findAll();
-        } catch (Exception e) {
-            log.error(ExceptionTypes.Exception.Database +": "+  e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
+        var artists = repository.findAll();
         rules.checkIfAnyArtistExists(artists);
+        log.info("Artist service getAll method called.");
         return artists.stream()
                 .map(artist -> mapper.map(artist, GetAllArtistsResponse.class)).toList();
     }
 
     @Override
     public CreateArtistResponse add(CreateArtistRequest request) {
-        Artist artistSave = artistMapper.convertToCreateArtistRequest(request);
+        Artist artistSave = artistMapper.convertCreateArtistRequestToArtist(request);
         artistSave.setId(null);
-        Artist responseArtist;
-        try {
-            responseArtist = repository.save(artistSave);
-        } catch (Exception e) {
-            log.error(ExceptionTypes.Exception.Database  +": "+  e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
-        return artistMapper.map_create(responseArtist);
+        var responseArtist = repository.save(artistSave);
+        log.info("{} artist added.", artistSave.getName());
+        return artistMapper.convertArtistToCreateArtistResponse(responseArtist);
     }
 
     @Override
     public void delete(UUID id) {
         rules.checkIfArtistExists(id);
-        try {
-            repository.deleteById(id);
-        }catch (Exception e){
-            log.error(ExceptionTypes.Exception.Database +": "+ e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
-
+        repository.deleteById(id);
+        log.info("{} artist deleted.", this.getById(id).getName());
     }
 
     @Override
     public UpdateArtistResponse update(UUID id, UpdateArtistRequest request) {
         rules.checkIfArtistExists(id);
-        var updateArtist = artistMapper.map_update(request);
+        var updateArtist = artistMapper.convertUpdateArtistRequestToArtist(request);
         updateArtist.setId(id);
-        Artist artistResponse;
-        try {
-             artistResponse = repository.save(updateArtist);
-        }catch (Exception e){
-            log.error(ExceptionTypes.Exception.Database +": "+ e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
-
-        return artistMapper.map_update(artistResponse);
+        var artistResponse = repository.save(updateArtist);
+        log.info("{} artist updated.", updateArtist.getName());
+        return artistMapper.convertArtistToUpdateArtistResponse(artistResponse);
     }
 
     @Override
     public GetArtistResponse getById(UUID id) {
-        Artist artist;
-        try {
-             artist = repository.findById(id).orElseThrow();
-        }catch (Exception e){
-            log.error(ExceptionTypes.Exception.Database +": "+ e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
-        var response = artistMapper.map_getbyid(artist);
+        var artist = repository.findById(id).orElseThrow();
+        var response = artistMapper.convertArtistToGetArtistResponse(artist);
+        log.info("Artist service: {} getById method called.", this.getById(id).getName());
         return response;
     }
 

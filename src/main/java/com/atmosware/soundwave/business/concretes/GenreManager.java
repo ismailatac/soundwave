@@ -7,12 +7,15 @@ import com.atmosware.soundwave.common.constants.ExceptionTypes;
 import com.atmosware.soundwave.core.exceptions.DatabaseException;
 import com.atmosware.soundwave.entities.Genre;
 import com.atmosware.soundwave.repository.GenreRepository;
+
 import java.util.List;
 import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -24,14 +27,9 @@ public class GenreManager implements GenreService {
 
     @Override
     public List<GetAllGenresResponse> getAll() {
-        List<Genre> genres;
-        try {
-             genres = repository.findAll();
-        }catch (Exception e){
-            log.error(ExceptionTypes.Exception.Database+": "+ e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
+        var genres = repository.findAll();
         rules.checkIfAnyGenreExists(genres);
+        log.info("Genre service getAll method called.");
         return genres.stream()
                 .map(genre -> mapper.map(genre, GetAllGenresResponse.class)).toList();
     }
@@ -40,27 +38,16 @@ public class GenreManager implements GenreService {
     public CreateGenreResponse add(CreateGenreRequest request) {
         Genre genreSave = mapper.map(request, Genre.class);
         genreSave.setId(null);
-        Genre responseGenre;
-        try{
-             responseGenre = repository.save(genreSave);
-        }catch (Exception e){
-            log.error(ExceptionTypes.Exception.Database+": "+ e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
-
+        var responseGenre = repository.save(genreSave);
+        log.info("{} genre added.", genreSave.getName());
         return mapper.map(responseGenre, CreateGenreResponse.class);
     }
 
     @Override
     public void delete(UUID id) {
         rules.checkIfGenreExists(id);
-        try {
-            repository.deleteById(id);
-        }catch (Exception e){
-            log.error(ExceptionTypes.Exception.Database+": "+ e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
-
+        repository.deleteById(id);
+        log.info("{} genre deleted.", this.getById(id).getName());
     }
 
     @Override
@@ -68,27 +55,16 @@ public class GenreManager implements GenreService {
         rules.checkIfGenreExists(id);
         Genre updateGenre = mapper.map(request, Genre.class);
         updateGenre.setId(id);
-        Genre genreResponse;
-        try{
-             genreResponse = repository.save(updateGenre);
-        }catch (Exception e){
-            log.error(ExceptionTypes.Exception.Database+": "+ e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
+        var genreResponse = repository.save(updateGenre);
+        log.info("{} genre updated.", updateGenre.getName());
         return mapper.map(genreResponse, UpdateGenreResponse.class);
     }
 
     @Override
     public GetGenreResponse getById(UUID id) {
-        Genre genre;
-        try {
-            genre = repository.findById(id).orElseThrow();
-        }catch (Exception e){
-            log.error(ExceptionTypes.Exception.Database+": "+ e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
-        GetGenreResponse response = mapper.map(genre, GetGenreResponse.class);
-        return response;
+        var genre = repository.findById(id).orElseThrow();
+        log.info("Genre service: {} getById method called.", this.getById(id).getName());
+        return mapper.map(genre, GetGenreResponse.class);
     }
 
 }

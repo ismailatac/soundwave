@@ -7,6 +7,7 @@ public class ExceptionTypes {
         public static String Business = "BUSINESS_EXCEPTION";
         public static String Auth = "AUTH_EXCEPTION";
         public static String Jwt = "JWT_EXCEPTION";
+        public static String Cloudinary ="CLOUDINARY_EXCEPTION";
     }
 
 }

@@ -47,6 +47,7 @@ public class UserBusinessRules {
             log.error(ExceptionTypes.Exception.Auth + " " + e.getMessage());
             throw new AuthException("Giriş yapılamadı!");
         }
+        log.info("{} logged in.",username);
         return new CreateLoginResponse(true, authResponse.getUser().getRole(), authResponse.getToken());
 
     }

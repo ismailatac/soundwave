@@ -7,6 +7,7 @@ import com.atmosware.soundwave.business.rules.UserBusinessRules;
 import com.atmosware.soundwave.common.constants.ExceptionTypes;
 import com.atmosware.soundwave.core.exceptions.DatabaseException;
 import com.atmosware.soundwave.core.utilities.dtos.security.CreateRegisterRequest;
+import com.atmosware.soundwave.core.utilities.mapstruct.UserMapper;
 import com.atmosware.soundwave.entities.User;
 import com.atmosware.soundwave.repository.UserRepository;
 
@@ -28,17 +29,13 @@ public class UserManager implements UserService {
     private final ModelMapper mapper;
     private final UserBusinessRules rules;
     private final AuthService authService;
+    private final UserMapper userMapper;
 
     @Override
     public List<GetAllUsersResponse> getAll() {
-        List<User> users;
-        try {
-            users = repository.findAll();
-        } catch (Exception e) {
-            log.error(ExceptionTypes.Exception.Database + ": " + e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
+        var users = repository.findAll();
         rules.checkIfAnyUserExists(users);
+        log.info("User service getAll method called.");
         return users.stream()
                 .map(user -> mapper.map(user, GetAllUsersResponse.class)).toList();
     }
@@ -48,34 +45,26 @@ public class UserManager implements UserService {
         rules.checkIfSameUserExists(request);
         User userSave = mapper.map(request, User.class);
         userSave.setId(null);
-        CreateUserResponse responseUser = new CreateUserResponse();
+        CreateUserResponse responseUser;
         try {
             var authResponse = authService.register(mapper.map(request, CreateRegisterRequest.class));
-            userSave.setName(authResponse.getUser().getName());
-            userSave.setPassword(authResponse.getUser().getPassword());
-            userSave.setRole(authResponse.getUser().getRole());
+            userSave = userMapper.convertToCreateAuthResponseToUser(authResponse);
             var repoUser = repository.save(userSave);
-            authResponse.setUser(userSave);
-            responseUser.setId(repoUser.getId());
-            responseUser.setRole(authResponse.getUser().getRole());
-            responseUser.setName(authResponse.getUser().getName());
-            responseUser.setToken(authResponse.getToken());
+            authResponse.setUser(repoUser);
+            responseUser = userMapper.convertCreateAuthResponseToCreateUserResponse(authResponse);
         } catch (Exception e) {
             log.error(ExceptionTypes.Exception.Database + ": " + e.getMessage());
             throw new DatabaseException(e.getMessage());
         }
+        log.info("{} user added.", userSave.getName());
         return responseUser;
     }
 
     @Override
     public void delete(UUID id) {
         rules.checkIfUserExists(id);
-        try {
-            repository.deleteById(id);
-        } catch (Exception e) {
-            log.error(ExceptionTypes.Exception.Database + ": " + e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
+        repository.deleteById(id);
+        log.info("{} user deleted.", this.getById(id).getName());
     }
 
     @Override
@@ -83,27 +72,16 @@ public class UserManager implements UserService {
         rules.checkIfUserExists(id);
         User updateUser = mapper.map(request, User.class);
         updateUser.setId(id);
-        User userResponse;
-        try {
-            userResponse = repository.save(updateUser);
-        } catch (Exception e) {
-            log.error(ExceptionTypes.Exception.Database + ": " + e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
+        var userResponse = repository.save(updateUser);
+        log.info("{} user updated.", updateUser.getName());
         return mapper.map(userResponse, UpdateUserResponse.class);
     }
 
     @Override
     public GetUserResponse getById(UUID id) {
-        User user;
-        try {
-            user = repository.findById(id).orElseThrow();
-        } catch (Exception e) {
-            log.error(ExceptionTypes.Exception.Database + ": " + e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
-        GetUserResponse response = mapper.map(user, GetUserResponse.class);
-        return response;
+        var user = repository.findById(id).orElseThrow();
+        log.info("User service: {} getById method called.", this.getById(id).getName());
+        return mapper.map(user, GetUserResponse.class);
     }
 
     @Override

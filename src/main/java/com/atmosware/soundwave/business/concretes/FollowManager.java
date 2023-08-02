@@ -28,14 +28,9 @@ public class FollowManager implements FollowService {
 
     @Override
     public List<GetAllFollowsResponse> getAll() {
-        List<Follow> follows;
-        try {
-             follows = repository.findAll();
-        } catch (Exception e) {
-            log.error(ExceptionTypes.Exception.Database +": "+  e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
+        var follows = repository.findAll();
         rules.checkIfAnyFollowExists(follows);
+        log.info("Follow service getAll method called.");
         return follows.stream()
                 .map(follow -> mapper.map(follow, GetAllFollowsResponse.class)).toList();
     }
@@ -43,52 +38,32 @@ public class FollowManager implements FollowService {
     @Override
     public CreateFollowResponse add(CreateFollowRequest request) {
         rules.checkIfUserIdExists(request);
-        Follow followSave = followMapper.map_create(request);
-        Follow responseFollow;
-        try {
-             responseFollow = repository.save(followSave);
-        }catch (Exception e){
-            log.error(ExceptionTypes.Exception.Database+": "+ e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
-        return followMapper.map_create(responseFollow);
+        Follow followSave = followMapper.convertCreateFollowRequestToFollow(request);
+        var responseFollow = repository.save(followSave);
+        log.info("{} followed to {}",request.getFollowedId(),request.getFollowingId());
+        return followMapper.convertFollowToCreateFollowResponse(responseFollow);
     }
 
     @Override
     public void delete(UUID id) {
         rules.checkIfFollowExists(id);
-        try {
-            repository.deleteById(id);
-        }catch (Exception e){
-            log.error(ExceptionTypes.Exception.Database+": "+ e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
-
+        repository.deleteById(id);
+        log.info("{} follow deleted.", id);
     }
 
     @Override
     public UpdateFollowResponse update(UUID id, UpdateFollowRequest request) {
-        Follow updateFollow = followMapper.map_update(request);
+        Follow updateFollow = followMapper.convertUpdateFollowRequestToFollow(request);
         updateFollow.setId(id);
-        Follow followResponse;
-        try {
-             followResponse = repository.save(updateFollow);
-        }catch (Exception e){
-            log.error(ExceptionTypes.Exception.Database+": "+ e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
+        var followResponse = repository.save(updateFollow);
+        log.info("{} follow updated.", updateFollow.getId());
         return mapper.map(followResponse, UpdateFollowResponse.class);
     }
 
     @Override
     public GetFollowResponse getById(UUID id) {
-        Follow follow;
-        try {
-             follow = repository.findById(id).orElseThrow();
-        }catch (Exception e){
-            log.error(ExceptionTypes.Exception.Database+": "+ e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
+        var follow = repository.findById(id).orElseThrow();
+        log.info("Follow service: {} getById method called.", id);
         return mapper.map(follow, GetFollowResponse.class);
     }
 }

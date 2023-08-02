@@ -2,6 +2,7 @@ package com.atmosware.soundwave.api.controllers;
 
 import com.atmosware.soundwave.business.abstracts.SongService;
 import com.atmosware.soundwave.business.dtos.song.*;
+import com.atmosware.soundwave.core.exceptions.CloudinaryException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -42,7 +43,7 @@ public class SongsController {
     }
 
     @PostMapping(path = "/upload",consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public UploadSongResponse upload(@RequestParam UUID songId, @RequestPart MultipartFile file) {
+    public UploadSongResponse upload(@RequestParam UUID songId, @RequestPart MultipartFile file) throws CloudinaryException {
         return service.upload(songId,file);
     }
     @PostMapping

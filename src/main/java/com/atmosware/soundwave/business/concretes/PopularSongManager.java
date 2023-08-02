@@ -26,16 +26,9 @@ public class PopularSongManager implements PopularSongService {
 
     @Override
     public List<GetAllPopularSongsResponse> getAll() {
-
-        List<PopularSong> popularSongs;
-        try {
-            popularSongs = (List<PopularSong>) repository.findAll();
-        } catch (Exception e) {
-            log.error(ExceptionTypes.Exception.Database + ": " + e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
+        var popularSongs = (List<PopularSong>) repository.findAll();
         rules.checkIfAnyPopularSongExists(popularSongs);
-
+        log.info("PopularSong service getAll method called.");
         return popularSongs.stream()
                 .map(popularSong -> mapper.map(popularSong, GetAllPopularSongsResponse.class)).toList();
     }
@@ -45,26 +38,16 @@ public class PopularSongManager implements PopularSongService {
     public CreatePopularSongResponse add(CreatePopularSongRequest request) {
         PopularSong popularSongSave = mapper.map(request, PopularSong.class);
         popularSongSave.setId(null);
-        PopularSong responsePopularSong;
-        try {
-            responsePopularSong = repository.save(popularSongSave);
-        } catch (Exception e) {
-            log.error(ExceptionTypes.Exception.Database + ": " + e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
+        var responsePopularSong = repository.save(popularSongSave);
+        log.info("{} popularSong added.", popularSongSave.getSongId());
         return mapper.map(responsePopularSong, CreatePopularSongResponse.class);
     }
 
     @Override
     public void delete(UUID id) {
         rules.checkIfPopularSongExists(id);
-        try {
-            repository.deleteById(id);
-        } catch (Exception e) {
-            log.error(ExceptionTypes.Exception.Database + ": " + e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
-
+        repository.deleteById(id);
+        log.info("{} popularSong deleted.", this.getById(id).getSongId());
     }
 
     @Override
@@ -72,25 +55,15 @@ public class PopularSongManager implements PopularSongService {
         rules.checkIfPopularSongExists(id);
         PopularSong updatePopularSong = mapper.map(request, PopularSong.class);
         updatePopularSong.setId(id);
-        PopularSong popularSongResponse;
-        try {
-            popularSongResponse = repository.save(updatePopularSong);
-        } catch (Exception e) {
-            log.error(ExceptionTypes.Exception.Database + ": " + e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
+        var popularSongResponse = repository.save(updatePopularSong);
+        log.info("{} popularSong updated.", updatePopularSong.getSongId());
         return mapper.map(popularSongResponse, UpdatePopularSongResponse.class);
     }
 
     @Override
     public GetPopularSongResponse getById(UUID id) {
-        PopularSong popularSong;
-        try {
-            popularSong = repository.findById(id).orElseThrow();
-        } catch (Exception e) {
-            log.error(ExceptionTypes.Exception.Database + ": " + e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
+        var popularSong = repository.findById(id).orElseThrow();
+        log.info("PopularSong service: {} getById method called.", this.getById(id).getSongId());
         return mapper.map(popularSong, GetPopularSongResponse.class);
     }
 }

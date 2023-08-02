@@ -3,18 +3,13 @@ package com.atmosware.soundwave.business.concretes;
 import com.atmosware.soundwave.business.abstracts.AlbumService;
 import com.atmosware.soundwave.business.abstracts.ArtistService;
 import com.atmosware.soundwave.business.dtos.album.*;
-import com.atmosware.soundwave.business.dtos.artist.GetArtistResponse;
 import com.atmosware.soundwave.business.rules.AlbumBusinessRules;
-import com.atmosware.soundwave.common.constants.ExceptionTypes;
-import com.atmosware.soundwave.core.exceptions.DatabaseException;
 import com.atmosware.soundwave.entities.Album;
 import com.atmosware.soundwave.entities.Artist;
 import com.atmosware.soundwave.repository.AlbumRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -36,8 +31,7 @@ public class AlbumManager implements AlbumService {
         var albums = repository.findAll();
         rules.checkIfAnyAlbumExists(albums);
         log.info("Album service getAll method called.");
-        return albums.stream()
-                .map(album -> mapper.map(album, GetAllAlbumsResponse.class)).toList();
+        return albums.stream().map(album -> mapper.map(album, GetAllAlbumsResponse.class)).toList();
     }
 
     @Override
@@ -50,7 +44,7 @@ public class AlbumManager implements AlbumService {
         albumSave.setArtist(artist);
         albumSave.setReleaseDate(LocalDate.now());
         albumSave = repository.save(albumSave);
-        log.info("{} album added.",albumSave.getName());
+        log.info("{} album added.", albumSave.getName());
         return mapper.map(albumSave, CreateAlbumResponse.class);
     }
 
@@ -58,7 +52,7 @@ public class AlbumManager implements AlbumService {
     public void delete(UUID id) {
         rules.checkIfAlbumExists(id);
         repository.deleteById(id);
-        log.info("{} album deleted.",this.getById(id).getName());
+        log.info("{} album deleted.", this.getById(id).getName());
     }
 
     @Override
@@ -67,7 +61,7 @@ public class AlbumManager implements AlbumService {
         Album updateAlbum = mapper.map(request, Album.class);
         updateAlbum.setId(id);
         updateAlbum = repository.save(updateAlbum);
-        log.info("{} album updated.",updateAlbum.getName());
+        log.info("{} album updated.", updateAlbum.getName());
         return mapper.map(updateAlbum, UpdateAlbumResponse.class);
     }
 
@@ -75,11 +69,9 @@ public class AlbumManager implements AlbumService {
     public GetAlbumResponse getById(UUID id) {
         rules.checkIfAlbumExists(id);
         var album = repository.findById(id).orElseThrow();
-
-        log.info("Album: {} getById method called.",this.getById(id).getName());
+        log.info("Album service: {} getById method called.", this.getById(id).getName());
         return mapper.map(album, GetAlbumResponse.class);
     }
-
 
 
 }

@@ -7,6 +7,7 @@ import com.atmosware.soundwave.business.abstracts.SongService;
 import com.atmosware.soundwave.business.dtos.song.*;
 import com.atmosware.soundwave.business.rules.SongBusinessRules;
 import com.atmosware.soundwave.common.constants.ExceptionTypes;
+import com.atmosware.soundwave.core.exceptions.CloudinaryException;
 import com.atmosware.soundwave.core.exceptions.DatabaseException;
 import com.atmosware.soundwave.core.utilities.cloudinary.CloudinaryService;
 import com.atmosware.soundwave.entities.*;
@@ -37,14 +38,9 @@ public class SongManager implements SongService {
 
     @Override
     public List<GetAllSongsResponse> getAll() {
-        List<Song> songs;
-        try {
-            songs = repository.findAll();
-        } catch (Exception e) {
-            log.error(ExceptionTypes.Exception.Database +": "+  e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
+        var songs = repository.findAll();
         rules.checkIfAnySongExists(songs);
+        log.info("Album service getAll method called.");
         return songs.stream().map(song -> mapper.map(song, GetAllSongsResponse.class)).toList();
         //TODO:stream ->  filter flapmap arasındaki fark -- optional
     }
@@ -53,6 +49,7 @@ public class SongManager implements SongService {
 
     @Override
     public CreateSongResponse add(CreateSongRequest request) {
+        //todo: mapstruct kullan
         Genre genre = mapper.map(genreService.getById(request.getGenreId()), Genre.class);
         Album album = mapper.map(albumService.getById(request.getAlbumId()), Album.class);
         Song songSave = new Song();
@@ -60,26 +57,16 @@ public class SongManager implements SongService {
         songSave.setName(request.getName());
         songSave.setGenre(genre);
         songSave.setAlbum(album);
-        Song responseSong;
-        try {
-            responseSong = repository.save(songSave);
-        } catch (Exception e) {
-            log.error(ExceptionTypes.Exception.Database +": "+  e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
+        var responseSong = repository.save(songSave);
+        log.info("{} song added.", songSave.getName());
         return mapper.map(responseSong, CreateSongResponse.class);
     }
 
     @Override
     public void delete(UUID id) {
         rules.checkIfSongExists(id);
-        try {
-            repository.deleteById(id);
-        }catch (Exception e){
-            log.error(ExceptionTypes.Exception.Database+": "+ e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
-
+        repository.deleteById(id);
+        log.info("{} song deleted.", this.getById(id).getName());
     }
 
     @Override
@@ -87,45 +74,34 @@ public class SongManager implements SongService {
         rules.checkIfSongExists(id);
         Song updateSong = mapper.map(request, Song.class);
         updateSong.setId(id);
-        Song songResponse;
-        try{
-             songResponse = repository.save(updateSong);
-        }catch (Exception e){
-            log.error(ExceptionTypes.Exception.Database+": "+ e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
+        var songResponse = repository.save(updateSong);
+        log.info("{} song updated.", updateSong.getName());
         return mapper.map(songResponse, UpdateSongResponse.class);
     }
 
     @Override
     public GetSongResponse getById(UUID id) {
-        Song song;
-        try {
-             song = repository.findById(id).orElseThrow();
-        }catch (Exception e){
-            log.error(ExceptionTypes.Exception.Database+": "+ e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
-        GetSongResponse response = mapper.map(song, GetSongResponse.class);
-        return response;
+        var song = repository.findById(id).orElseThrow();
+        log.info("Song service: {} getById method called.", this.getById(id).getName());
+        return mapper.map(song, GetSongResponse.class);
     }
 
     @Override
-    public UploadSongResponse upload(UUID songId, MultipartFile file) {
+    public UploadSongResponse upload(UUID songId, MultipartFile file) throws CloudinaryException {
         Song song = repository.findById(songId).orElseThrow();
         song = this.uploadFile(song,file);
-        System.out.println(song.getUrl());
         repository.save(song);
+        log.info("{} file link added to song {}",file.getName(),song.getName());
         return new UploadSongResponse(true);
     }
 
-    private Song uploadFile(Song song, MultipartFile file) {
+    private Song uploadFile(Song song, MultipartFile file) throws CloudinaryException {
         try {
             Map<?, ?> uploadSong = cloudinaryService.upload(file).getUploadResult();
              song.setUrl(uploadSong.get("url").toString());
         }catch (Exception e){
-            log.error(ExceptionTypes.Exception.Database+": "+ e.getMessage());
-            throw new DatabaseException(e.getMessage());
+            log.error(ExceptionTypes.Exception.Cloudinary+": "+ e.getMessage());
+            throw new CloudinaryException(e.getMessage());
         }
         return song;
     }

@@ -31,14 +31,9 @@ public class FavoriteManager implements FavoriteService {
 
     @Override
     public List<GetAllFavoritesResponse> getAll() {
-        List<Favorite> favorites;
-        try {
-            favorites = repository.findAll();
-        } catch (Exception e) {
-            log.error(ExceptionTypes.Exception.Database +": "+  e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
+        var favorites = repository.findAll();
         rules.checkIfAnyFavoriteExists(favorites);
+        log.info("Favorite service getAll method called.");
         return favorites.stream()
                 .map(favorite -> mapper.map(favorite, GetAllFavoritesResponse.class)).toList();
     }
@@ -46,29 +41,19 @@ public class FavoriteManager implements FavoriteService {
     @Override
     public CreateFavoriteResponse add(CreateFavoriteRequest request) {
         Favorite favoriteSave = new Favorite();
-        favoriteSave.setId(null);
         favoriteSave.setSong(mapper.map(songService.getById(request.getSongId()), Song.class));
         favoriteSave.setUser(mapper.map(userService.getById(request.getUserId()), User.class));
         favoriteSave.setId(null);
-        Favorite responseFavorite;
-        try {
-             responseFavorite = repository.save(favoriteSave);
-        } catch (Exception e) {
-            log.error(ExceptionTypes.Exception.Database  +": "+  e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
+        var responseFavorite = repository.save(favoriteSave);
+        log.info("{} liked to the song {}", favoriteSave.getUser().getName(),favoriteSave.getSong().getName());
         return mapper.map(responseFavorite, CreateFavoriteResponse.class);
     }
 
     @Override
     public void delete(UUID id) {
         rules.checkIfFavoriteExists(id);
-        try {
-            repository.deleteById(id);
-        }catch (Exception e){
-            log.error(ExceptionTypes.Exception.Database +": "+ e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
+        repository.deleteById(id);
+        log.info("{} favorite deleted.", id);
     }
 
     @Override
@@ -76,25 +61,15 @@ public class FavoriteManager implements FavoriteService {
         rules.checkIfFavoriteExists(id);
         Favorite updateFavorite = mapper.map(request, Favorite.class);
         updateFavorite.setId(id);
-        Favorite favoriteResponse;
-        try {
-             favoriteResponse = repository.save(updateFavorite);
-        }catch (Exception e){
-            log.error(ExceptionTypes.Exception.Database +": "+ e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
+        var favoriteResponse = repository.save(updateFavorite);
+        log.info("{} favorite updated.", updateFavorite.getId());
         return mapper.map(favoriteResponse, UpdateFavoriteResponse.class);
     }
 
     @Override
     public GetFavoriteResponse getById(UUID id) {
-        Favorite favorite;
-        try {
-             favorite = repository.findById(id).orElseThrow();
-        }catch (Exception e){
-            log.error(ExceptionTypes.Exception.Database +": "+ e.getMessage());
-            throw new DatabaseException(e.getMessage());
-        }
+        var favorite = repository.findById(id).orElseThrow();
+        log.info("Favorite service: {} getById method called.", id);
         return mapper.map(favorite, GetFavoriteResponse.class);
     }
 

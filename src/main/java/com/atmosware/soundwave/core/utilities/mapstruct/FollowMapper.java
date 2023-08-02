@@ -16,7 +16,7 @@ import java.util.UUID;
 public interface FollowMapper {
     FollowMapper INSTANCE = Mappers.getMapper(FollowMapper.class);
     @Mapping(target = "id", expression = "java(UUID.randomUUID())")
-    Follow map_create(CreateFollowRequest followRequest);
-    CreateFollowResponse map_create(Follow followRequest);
-    Follow map_update(UpdateFollowRequest followRequest);
+    Follow convertCreateFollowRequestToFollow(CreateFollowRequest followRequest);
+    CreateFollowResponse convertFollowToCreateFollowResponse(Follow followRequest);
+    Follow convertUpdateFollowRequestToFollow(UpdateFollowRequest followRequest);
 }
